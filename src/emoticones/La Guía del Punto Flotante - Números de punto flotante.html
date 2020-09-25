@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<!-- saved from url=(0036)http://puntoflotante.org/formats/fp/ -->
+<html lang="es"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>La Guía del Punto Flotante - Números de punto flotante</title>
+	
+    <meta name="generator" content="nanoc 3.1.2">
+	
+		<meta name="Description" content="Explicación de cómo funcionan los números de punto flotante y para qué son útiles">
+	
+    <link rel="stylesheet" type="text/css" href="./La Guía del Punto Flotante - Números de punto flotante_files/style.css" media="screen">
+	<link rel="shortcut icon" href="http://puntoflotante.org/favicon.ico" type="image/vnd.microsoft.icon">
+	<script type="text/javascript" src="./La Guía del Punto Flotante - Números de punto flotante_files/plusone.js"></script><style type="text/css"></style>
+  </head>
+  <body>  
+    <div id="main">
+		<h1>Números de punto flotante</h1>
+      <h2 id="por-qu-son-necesarios-los-nmeros-de-punto-flotante">Por qué son necesarios los números de punto flotante</h2>
+
+<p>Como la memoria de los ordenadores es limitada, no puedes almacenar números
+con precisión infinita, no importa si usas <a href="http://puntoflotante.org/formats/binary/">fracciones binarias</a> o
+decimales: en algún momento tienes que cortar. Pero ¿cuánta precisión se necesita?
+¿Y <em>dónde</em> se necesita? ¿Cuántos dígitos enteros y cuántos fraccionarios?</p>
+
+<ul>
+  <li>Para un ingeniero construyendo una autopista, no importa si tiene 10 metros o 10.0001 metros de ancho ─ posiblemente ni siquiera sus mediciones eran así de precisas.</li>
+  <li>Para alguien diseñando un microchip, 0.0001 metros (la décima parte de un milímetro) es una diferencia <em>enorme</em> ─ pero nunca tendrá que manejar distancias mayores de 0.1 metros.</li>
+  <li>Un físico necesita usar la <a href="http://es.wikipedia.org/wiki/Velocidad_de_la_luz">velocidad de la luz</a> (más o menos 300000000) y la <a href="http://es.wikipedia.org/wiki/Constante_de_gravitaci%C3%B3n_universal">constante de gravitación universal</a> (más o menos 0.0000000000667) juntas en el mismo cálculo.</li>
+</ul>
+
+<p>Para satisfacer al ingeniero y al diseñador de circuitos integrados, el formato
+tiene que ser preciso para números de órdenes de magnitud muy diferentes. Sin
+embargo, solo se necesita precisión <em>relativa</em>. Para satisfacer al físico, debe
+ser posible hacer cálculos que involucren números de órdenes muy dispares.</p>
+
+<p>Básicamente, tener un número fijo de dígitos enteros y fraccionarios no es útil ─ y la solución es un formato con un <em>punto flotante</em>.</p>
+
+<h2 id="cmo-funcionan-los-nmeros-de-punto-flotante">Cómo funcionan los números de punto flotante</h2>
+
+<p>La idea es descomponer el número en dos partes:</p>
+
+<ul>
+  <li>Una <strong>mantisa</strong> (también llamada coeficiente o significando) que contiene los dígitos del número. Mantisas negativas representan números negativos.</li>
+  <li>Un <strong>exponente</strong> que indica dónde se coloca el punto decimal (o binario) en relación al inicio de la mantisa. Exponentes negativos representan números menores que uno.</li>
+</ul>
+
+<p>Este formato cumple todos los requisitos:</p>
+
+<ul>
+  <li>Puede representar números de órdenes de magnitud enormemente dispares (limitado por la longitud del exponente).</li>
+  <li>Proporciona la misma precisión relativa para todos los órdenes (limitado por la longitud de la mantisa).</li>
+  <li>Permite cálculos entre magnitudes: multiplicar un número muy grande y uno muy pequeño conserva la precisión de ambos en el resultado.</li>
+</ul>
+
+<p>Los números de coma flotante decimales normalmente se expresan en
+<a href="http://es.wikipedia.org/wiki/Notaci%C3%B3n_cient%C3%ADfica">notación científica</a> con un
+punto explícito siempre entre el primer y el segundo dígitos. El exponente o bien
+se escribe explícitamente incluyendo la base, o se usa una <strong>e</strong> para
+separarlo de la mantisa.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Mantisa</th>
+      <th>Exponente</th>
+      <th>Notación científica</th>
+      <th>Valor en punto fijo</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1.5</td>
+      <td>4</td>
+      <td>1.5 ⋅ 10<sup>4</sup></td>
+      <td>15000</td>
+    </tr>
+    <tr>
+      <td>-2.001</td>
+      <td>2</td>
+      <td>-2.001 ⋅ 10<sup>2</sup></td>
+      <td>-200.1</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>-3</td>
+      <td>5 ⋅ 10<sup>-3</sup></td>
+      <td>0.005</td>
+    </tr>
+    <tr>
+      <td>6.667</td>
+      <td>-11</td>
+      <td>6.667e-11</td>
+      <td>0.0000000000667</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="el-estndar">El estándar</h2>
+
+<p>Casi todo el hardware y lenguajes de programación utilizan números de punto flotante en los mismos
+formatos binarios, que están definidos en el estándar <a href="http://es.wikipedia.org/wiki/IEEE_coma_flotante">IEEE 754</a>.
+Los formatos más comunes son de 32 o 64 bits de longitud total:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Formato</th>
+      <th>Bits totales</th>
+      <th>Bits significativos</th>
+      <th>Bits del exponente</th>
+      <th>Número más pequeño</th>
+      <th>Número más grande</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Precisión sencilla</td>
+      <td>32</td>
+      <td>23 + 1 signo</td>
+      <td>8</td>
+      <td>~1.2 ⋅ 10<sup>-38</sup></td>
+      <td>~3.4 ⋅ 10<sup>38</sup></td>
+    </tr>
+    <tr>
+      <td>Precisión doble</td>
+      <td>64</td>
+      <td>52 + 1 signo</td>
+      <td>11</td>
+      <td>~5.0 ⋅ 10<sup>-324</sup></td>
+      <td>~1.8 ⋅ 10<sup>308</sup></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Hay algunas pecularidades:</p>
+
+<ul>
+  <li>La <em>secuencia de bits</em> es primero el bit del signo, seguido del exponente y finalmente los bits significativos.</li>
+  <li>El exponente no tiene signo; en su lugar se le resta un <strong>desplazamiento</strong> (127 para sencilla y 1023 para doble precisión). Esto, junto con la secuencia de bits, permite que los números de punto flotante se puedan comparar y ordenar correctamente incluso cuando se interpretan como enteros.</li>
+  <li>Se asume que el bit más significativo de la mantisa es 1 y se omite, excepto para casos especiales.</li>
+  <li>Hay valores diferentes para <strong>cero positivo y cero negativo</strong>. Estos difieren en el bit del signo, mientras que todos los demás son 0. Deben ser considerados iguales aunque sus secuencias de bits sean diferentes.</li>
+  <li>Hay valores especiales <strong>no numéricos</strong> (NaN, «not a number» en inglés) en los que el exponente es todo unos y la mantisa <em>no</em> es todo ceros. Estos valores representan el resultado de algunas operaciones indefinidas (como multiplicar 0 por infinito, operaciones que involucren NaN, o casos específicos). Incluso valores NaN con idéntica secuencia de bits <em>no</em> deben ser considerados iguales.</li>
+</ul>
+
+			<g:plusone href="http://puntoflotante.org/"></g:plusone>
+			<div id="license">
+			<p>© Publicado en <a href="http://puntoflotante.org/">http://puntoflotante.org/</a> bajo una licencia
+			<a href="http://creativecommons.org/licenses/by/3.0/deed.es">Creative Commons Atribución Unported (BY)</a>.
+			Original en inglés por Michael Borgwardt en
+			<a href="http://floating-point-gui.de/">http://floating-point-gui.de/</a>.</p> 
+		</div>
+    </div>
+    <div id="sidebar">
+		<a href="http://puntoflotante.org/"><img src="./La Guía del Punto Flotante - Números de punto flotante_files/logo.png"></a>
+		<h2>La Guía del Punto Flotante</h2>
+		<ul>
+            <li><a href="http://floating-point-gui.de/" alt="in English"><img src="./La Guía del Punto Flotante - Números de punto flotante_files/en.png"></a></li>
+            <li><a href="http://puntoflotante.org/">Inicio</a></li>
+			<li><a href="http://puntoflotante.org/basic/">Respuestas básicas</a></li>
+			<li><a href="http://puntoflotante.org/references/">Referencias</a></li>
+			<li><a href="http://puntoflotante.org/xkcd/">xkcd</a></li>
+		</ul>
+	  
+		<h2>Formatos Numéricos</h2>
+		<ul>
+			<li><a href="http://puntoflotante.org/formats/binary/">Fracciones binarias</a></li>
+			<li><a href="./La Guía del Punto Flotante - Números de punto flotante_files/La Guía del Punto Flotante - Números de punto flotante.html">Punto flotante</a></li>
+			<li><a href="http://puntoflotante.org/formats/exact/">Tipos exactos</a></li>
+			<li><a href="http://puntoflotante.org/formats/integer/">Sobre usar enteros</a></li>
+		</ul>
+	
+		<h2>Errores</h2>
+		<ul>
+			<li><a href="http://puntoflotante.org/errors/rounding/">Redondeo</a></li>
+			<li><a href="http://puntoflotante.org/errors/comparison/">Comparación</a></li>
+			<li><a href="http://puntoflotante.org/errors/propagation/">Propagación</a></li>
+		</ul>
+		
+		<h2>Cheat sheets</h2>
+		<ul>
+			<li><a href="http://puntoflotante.org/languages/csharp/">C#</a></li>
+			<li><a href="http://puntoflotante.org/languages/java/">Java</a></li>
+			<li><a href="http://puntoflotante.org/languages/javascript/">JavaScript</a></li>
+			<li><a href="http://puntoflotante.org/languages/perl/">Perl</a></li>
+			<li><a href="http://puntoflotante.org/languages/php/">PHP</a></li>
+			<li><a href="http://puntoflotante.org/languages/python/">Python</a></li>
+			<li><a href="http://puntoflotante.org/languages/sql/">SQL</a></li>
+		</ul>
+    </div>
+<a href="http://github.com/Pybonacci/puntoflotante.org"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_white_ffffff.png" alt="Fork me on GitHub"></a>
+
+  
+
+</body></html>
